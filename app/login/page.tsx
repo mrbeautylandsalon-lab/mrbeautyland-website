@@ -19,7 +19,7 @@ export default function LoginPage() {
 
     try {
 
-      await signInWithEmailAndPassword(
+      const result = await signInWithEmailAndPassword(
         auth,
         email,
         password
@@ -27,7 +27,15 @@ export default function LoginPage() {
 
       alert("Login Successful 😎🔥");
 
-      window.location.href = "/dashboard";
+      if (result.user.email === "mrbeautylandsalon@gmail.com") {
+
+        window.location.href = "/admin";
+
+      } else {
+
+        window.location.href = "/dashboard";
+
+      }
 
     } catch (error) {
 
@@ -43,11 +51,19 @@ export default function LoginPage() {
 
     try {
 
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
 
       alert("Google Login Successful 😎🔥");
 
-      window.location.href = "/dashboard";
+      if (result.user.email === "mrbeautylandsalon@gmail.com") {
+
+        window.location.href = "/admin";
+
+      } else {
+
+        window.location.href = "/dashboard";
+
+      }
 
     } catch (error) {
 
