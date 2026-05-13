@@ -49,7 +49,7 @@ export default function Home() {
             {/* MOBILE MENU BUTTON */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden text-3xl font-bold"
+              className="text-3xl font-bold"
             >
               ☰
             </button>
@@ -107,7 +107,7 @@ export default function Home() {
           </div>
 
           {/* MOBILE LOGIN */}
-          <div className="md:hidden">
+          <div>
 
             {
               loggedIn ? (
@@ -139,7 +139,7 @@ export default function Home() {
         {
           menuOpen && (
 
-            <div className="md:hidden bg-white border-t border-neutral-200 px-6 py-6 flex flex-col gap-5 text-lg font-medium shadow-xl">
+            <div className="bg-white border-t border-neutral-200 px-6 py-6 flex flex-col gap-5 text-lg font-medium shadow-xl">
 
               <a href="#home">
                 Home
@@ -165,7 +165,7 @@ export default function Home() {
         id="home"
         className="relative min-h-screen pt-28 flex items-center justify-center text-center px-6 bg-cover bg-center"
         style={{
-          backgroundImage: "url('/images/hero.png')",
+          backgroundImage: "url('/images/luxuryhero.png')",
         }}
       >
 
