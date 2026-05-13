@@ -12,6 +12,8 @@ export default function Home() {
 
   const [loggedIn, setLoggedIn] = useState(false);
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -37,90 +39,124 @@ export default function Home() {
     <main className="bg-[#f7f1eb] text-black min-h-screen overflow-hidden">
 
       {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 w-full bg-[#f7f1eb]/90 backdrop-blur border-b border-neutral-200 z-50">
+      <nav className="fixed top-0 left-0 w-full bg-[#f7f1eb]/95 backdrop-blur border-b border-neutral-200 z-50">
 
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-5">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
 
+          {/* LEFT */}
           <div className="flex items-center gap-3">
 
+            {/* MOBILE MENU BUTTON */}
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="md:hidden text-3xl font-bold"
+            >
+              ☰
+            </button>
+
+            {/* LOGO */}
             <img
               src="/images/logo.png"
               alt="Logo"
-              className="w-12 h-12 rounded-full object-cover"
+              className="w-10 h-10 rounded-full object-cover"
             />
 
-            <h1 className="text-2xl font-bold tracking-wide">
+            <h1 className="text-xl md:text-2xl font-bold tracking-wide">
               MR BEAUTYLAND
             </h1>
 
           </div>
-{/* DESKTOP MENU */}
-<div className="hidden md:flex items-center gap-8 font-medium">
 
-  <a href="#home" className="hover:text-neutral-500 transition">
-    Home
-  </a>
+          {/* DESKTOP MENU */}
+          <div className="hidden md:flex items-center gap-8 font-medium">
 
-  <a href="#services" className="hover:text-neutral-500 transition">
-    Services
-  </a>
+            <a href="#home">
+              Home
+            </a>
 
-  <a href="#contact" className="hover:text-neutral-500 transition">
-    Contact
-  </a>
+            <a href="#services">
+              Services
+            </a>
 
-  {
-    loggedIn ? (
+            <a href="#contact">
+              Contact
+            </a>
 
-      <Link
-        href="/dashboard"
-        className="bg-black text-white px-6 py-3 rounded-full"
-      >
-        Dashboard
-      </Link>
+            {
+              loggedIn ? (
 
-    ) : (
+                <Link
+                  href="/dashboard"
+                  className="bg-black text-white px-6 py-3 rounded-full"
+                >
+                  Dashboard
+                </Link>
 
-      <Link
-        href="/login"
-        className="bg-black text-white px-6 py-3 rounded-full"
-      >
-        Login
-      </Link>
+              ) : (
 
-    )
-  }
+                <Link
+                  href="/login"
+                  className="bg-black text-white px-6 py-3 rounded-full"
+                >
+                  Login
+                </Link>
 
-</div>
+              )
+            }
 
-{/* MOBILE LOGIN BUTTON */}
-<div className="md:hidden">
+          </div>
 
-  {
-    loggedIn ? (
+          {/* MOBILE LOGIN */}
+          <div className="md:hidden">
 
-      <Link
-        href="/dashboard"
-        className="bg-black text-white px-5 py-2 rounded-full text-sm"
-      >
-        Dashboard
-      </Link>
+            {
+              loggedIn ? (
 
-    ) : (
+                <Link
+                  href="/dashboard"
+                  className="bg-black text-white px-4 py-2 rounded-full text-sm"
+                >
+                  Dashboard
+                </Link>
 
-      <Link
-        href="/login"
-        className="bg-black text-white px-5 py-2 rounded-full text-sm"
-      >
-        Login
-      </Link>
+              ) : (
 
-    )
-  }
+                <Link
+                  href="/login"
+                  className="bg-black text-white px-4 py-2 rounded-full text-sm"
+                >
+                  Login
+                </Link>
 
-</div>
-          
+              )
+            }
+
+          </div>
+
         </div>
+
+        {/* MOBILE MENU */}
+        {
+          menuOpen && (
+
+            <div className="md:hidden bg-white border-t border-neutral-200 px-6 py-6 flex flex-col gap-5 text-lg font-medium shadow-xl">
+
+              <a href="#home">
+                Home
+              </a>
+
+              <a href="#services">
+                Services
+              </a>
+
+              <a href="#contact">
+                Contact
+              </a>
+
+            </div>
+
+          )
+        }
 
       </nav>
 
