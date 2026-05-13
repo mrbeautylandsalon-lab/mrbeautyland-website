@@ -211,7 +211,7 @@ export default function DashboardPage() {
         </div>
 
         {/* STATS */}
-        <div className="grid md:grid-cols-4 gap-6 mb-10">
+        <div className="grid md:grid-cols-1 md:grid-cols-2-4 gap-6 mb-10">
 
           <div className="bg-white rounded-[35px] p-8">
 
@@ -219,7 +219,7 @@ export default function DashboardPage() {
               Total Bookings
             </p>
 
-            <h2 className="text-5xl font-bold">
+            <h2 className="text-3xl md:text-5xl font-bold">
               {bookings.length}
             </h2>
 
@@ -231,7 +231,7 @@ export default function DashboardPage() {
               Loyalty Points
             </p>
 
-            <h2 className="text-5xl font-bold">
+            <h2 className="text-3xl md:text-5xl font-bold">
               {loyaltyPoints}
             </h2>
 
@@ -255,7 +255,7 @@ export default function DashboardPage() {
               Active Offers
             </p>
 
-            <h2 className="text-5xl font-bold">
+            <h2 className="text-3xl md:text-5xl font-bold">
               {notifications.length}
             </h2>
 
@@ -299,7 +299,7 @@ export default function DashboardPage() {
 
             <div className="grid lg:grid-cols-2 gap-8">
 
-              <div className="bg-white rounded-[40px] p-10">
+              <div className="bg-white rounded-[25px] md:rounded-[40px] p-10">
 
                 <h2 className="text-4xl font-bold mb-8">
                   Upcoming Bookings
@@ -356,7 +356,7 @@ export default function DashboardPage() {
                     Current Plan
                   </p>
 
-                  <h3 className="text-5xl font-bold">
+                  <h3 className="text-3xl md:text-5xl font-bold">
                     {membership}
                   </h3>
 

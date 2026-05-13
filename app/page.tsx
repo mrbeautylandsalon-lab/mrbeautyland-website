@@ -485,7 +485,7 @@ export default function Home() {
         Contact Us
       </p>
 
-      <h2 className="text-5xl font-bold mb-8">
+      <h2 className="text-3xl md:text-5xl font-bold mb-8 break-words">
         Get In Touch
       </h2>
 
@@ -542,7 +542,7 @@ export default function Home() {
       Appointment Policy
     </h2>
 
-    <p className="text-lg leading-9 text-neutral-700 mb-10">
+    <p className="text-base md:text-lg leading-8 md:leading-9 text-neutral-700 mb-10 break-words">
       Cancellations for hair and grooming, makeup services, and other salon
       services are accepted up to 24 hours before the scheduled appointment.
       If you cancel within 24 hours of the service, a fee of 50% of the
