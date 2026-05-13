@@ -55,7 +55,7 @@ export default function Home() {
 
           </div>
 
-          <div className="hidden md:flex items-center gap-8 font-medium">
+          <div className="flex"items-center gap-8 font-medium">
 
             <a href="#home" className="hover:text-neutral-500 transition">
               Home
