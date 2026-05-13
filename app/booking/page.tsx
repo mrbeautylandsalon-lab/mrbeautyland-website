@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { supabase } from "../supabase";
 import emailjs from "@emailjs/browser";
@@ -77,7 +77,31 @@ export default function BookingPage() {
   const [showPopup, setShowPopup] = useState(false);
 
   const [orderId, setOrderId] = useState("");
+const [bookedSlots, setBookedSlots] = useState<string[]>([]);
+useEffect(() => {
 
+  if (!selectedDate) return;
+
+  const fetchBookedSlots = async () => {
+
+    const { data } = await supabase
+      .from("bookings")
+      .select("time")
+      .eq("date", selectedDate);
+
+    if (data) {
+
+      setBookedSlots(
+        data.map((item) => item.time)
+      );
+
+    }
+
+  };
+
+  fetchBookedSlots();
+
+}, [selectedDate]);
 const handleBooking = async () => {
 
   if (
@@ -283,28 +307,30 @@ try {
               Select Time Slot
             </h2>
 
-            <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4">
 
-              {
-                slots.map((slot, index) => (
+  {
+    slots.map((slot, index) => (
 
-                  <button
-                    key={index}
-                    onClick={() => setSelectedSlot(slot)}
-                    className={`py-4 rounded-2xl transition ${
-                      selectedSlot === slot
-                        ? "bg-black text-white"
-                        : "bg-[#f7f1eb]"
-                    }`}
-                  >
-                    {slot}
-                  </button>
+      <button
+        key={index}
+        onClick={() => setSelectedSlot(slot)}
+        disabled={bookedSlots.includes(slot)}
+        className={`py-4 rounded-2xl transition ${
+          bookedSlots.includes(slot)
+            ? "bg-neutral-300 text-neutral-500 cursor-not-allowed"
+            : selectedSlot === slot
+            ? "bg-black text-white"
+            : "bg-[#f7f1eb]"
+        }`}
+      >
+        {slot}
+      </button>
 
-                ))
-              }
+    ))
+  }
 
-            </div>
-
+</div>
           </div>
 
         </div>

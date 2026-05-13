@@ -38,127 +38,127 @@ export default function Home() {
 
     <main className="bg-[#f7f1eb] text-black min-h-screen overflow-hidden">
 
-      {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 w-full bg-[#f7f1eb]/95 backdrop-blur border-b border-neutral-200 z-50">
+{/* NAVBAR */}
+<nav className="fixed top-0 left-0 w-full bg-[#f7f1eb]/95 backdrop-blur border-b border-neutral-200 z-50">
 
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
+  <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
 
-          {/* LEFT */}
-          <div className="flex items-center gap-3">
+    {/* LEFT */}
+    <div className="flex items-center gap-3">
 
-            {/* MOBILE MENU BUTTON */}
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="text-3xl font-bold"
-            >
-              ☰
-            </button>
+      {/* MOBILE MENU BUTTON */}
+      <button
+        onClick={() => setMenuOpen(!menuOpen)}
+        className="md:hidden text-3xl font-bold"
+      >
+        ☰
+      </button>
 
-            {/* LOGO */}
-            <img
-              src="/images/logo.png"
-              alt="Logo"
-              className="w-10 h-10 rounded-full object-cover"
-            />
+      {/* LOGO */}
+      <img
+        src="/images/logo.png"
+        alt="Logo"
+        className="w-10 h-10 rounded-full object-cover"
+      />
 
-            <h1 className="text-xl md:text-2xl font-bold tracking-wide">
-              MR BEAUTYLAND
-            </h1>
+      <h1 className="text-xl md:text-2xl font-bold tracking-wide">
+        MR BEAUTYLAND
+      </h1>
 
-          </div>
+    </div>
 
-          {/* DESKTOP MENU */}
-          <div className="hidden md:flex items-center gap-8 font-medium">
+    {/* DESKTOP MENU */}
+    <div className="hidden md:flex items-center gap-8 font-medium">
 
-            <a href="#home">
-              Home
-            </a>
+      <a href="#home" className="hover:text-neutral-500 transition">
+        Home
+      </a>
 
-            <a href="#services">
-              Services
-            </a>
+      <a href="#services" className="hover:text-neutral-500 transition">
+        Services
+      </a>
 
-            <a href="#contact">
-              Contact
-            </a>
+      <a href="#contact" className="hover:text-neutral-500 transition">
+        Contact
+      </a>
 
-            {
-              loggedIn ? (
+      {
+        loggedIn ? (
 
-                <Link
-                  href="/dashboard"
-                  className="bg-black text-white px-6 py-3 rounded-full"
-                >
-                  Dashboard
-                </Link>
+          <Link
+            href="/dashboard"
+            className="bg-black text-white px-6 py-3 rounded-full"
+          >
+            Dashboard
+          </Link>
 
-              ) : (
+        ) : (
 
-                <Link
-                  href="/login"
-                  className="bg-black text-white px-6 py-3 rounded-full"
-                >
-                  Login
-                </Link>
+          <Link
+            href="/login"
+            className="bg-black text-white px-6 py-3 rounded-full"
+          >
+            Login
+          </Link>
 
-              )
-            }
+        )
+      }
 
-          </div>
+    </div>
 
-          {/* MOBILE LOGIN */}
-          <div>
+    {/* MOBILE LOGIN */}
+    <div className="md:hidden">
 
-            {
-              loggedIn ? (
+      {
+        loggedIn ? (
 
-                <Link
-                  href="/dashboard"
-                  className="bg-black text-white px-4 py-2 rounded-full text-sm"
-                >
-                  Dashboard
-                </Link>
+          <Link
+            href="/dashboard"
+            className="bg-black text-white px-4 py-2 rounded-full text-sm"
+          >
+            Dashboard
+          </Link>
 
-              ) : (
+        ) : (
 
-                <Link
-                  href="/login"
-                  className="bg-black text-white px-4 py-2 rounded-full text-sm"
-                >
-                  Login
-                </Link>
+          <Link
+            href="/login"
+            className="bg-black text-white px-4 py-2 rounded-full text-sm"
+          >
+            Login
+          </Link>
 
-              )
-            }
+        )
+      }
 
-          </div>
+    </div>
 
-        </div>
+  </div>
 
-        {/* MOBILE MENU */}
-        {
-          menuOpen && (
+  {/* MOBILE MENU */}
+  {
+    menuOpen && (
 
-            <div className="bg-white border-t border-neutral-200 px-6 py-6 flex flex-col gap-5 text-lg font-medium shadow-xl">
+      <div className="md:hidden bg-white border-t border-neutral-200 px-6 py-6 flex flex-col gap-5 text-lg font-medium shadow-xl">
 
-              <a href="#home">
-                Home
-              </a>
+        <a href="#home">
+          Home
+        </a>
 
-              <a href="#services">
-                Services
-              </a>
+        <a href="#services">
+          Services
+        </a>
 
-              <a href="#contact">
-                Contact
-              </a>
+        <a href="#contact">
+          Contact
+        </a>
 
-            </div>
+      </div>
 
-          )
-        }
+    )
+  }
 
-      </nav>
+</nav>
 
       {/* HERO SECTION */}
       <section
@@ -472,6 +472,18 @@ export default function Home() {
 
 </section>
 {/* CONTACT SECTION */}
+<div className="mt-10">
+
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3522.446702449136!2d73.33092957414124!3d28.01081971204387!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x393fe7768f4cf3d1%3A0x66b8d33c54e5dc7e!2sMR%20Beauty%20Land!5e0!3m2!1sen!2sin!4v1778667432035!5m2!1sen!2sin"
+    width="100%"
+    height="400"
+    style={{ border: 0 }}
+    loading="lazy"
+    className="rounded-[35px]"
+  ></iframe>
+
+</div>
 <section
   id="contact"
   className="bg-white px-6 md:px-12 py-28"
