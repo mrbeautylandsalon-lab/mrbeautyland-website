@@ -59,19 +59,19 @@ export default function AdminPage() {
 
   };
 
-  const updateStatus = async (
-    id: number,
-    status: string
-  ) => {
+const updateStatus = async (
+  id: number,
+  status: string
+) => {
 
-    await supabase
-      .from("bookings")
-      .update({ status })
-      .eq("id", id);
+  await supabase
+    .from("bookings")
+    .update({ status })
+    .eq("id", id);
 
-    fetchBookings();
+  fetchBookings();
 
-  };
+};
 
   const deleteBooking = async (
     id: number
