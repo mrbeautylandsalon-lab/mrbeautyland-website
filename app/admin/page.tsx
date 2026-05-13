@@ -79,7 +79,7 @@ export default function AdminPage() {
 
   return (
 
-    <main className="min-h-screen bg-[#f7f1eb] p-5 md:p-10">
+    <main className="min-h-screen bg-[#f7f1eb] text-black p-5 md:p-10">
 
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-10">
@@ -179,7 +179,7 @@ export default function AdminPage() {
 
               <div
                 key={booking.id}
-                className="bg-white rounded-[35px] p-6 md:p-8"
+                className="bg-white text-black rounded-[35px] p-6 md:p-8"
               >
 
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
