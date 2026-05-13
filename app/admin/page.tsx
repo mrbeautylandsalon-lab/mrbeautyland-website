@@ -8,7 +8,7 @@ import { onAuthStateChanged } from "firebase/auth";
 
 import { auth } from "../firebase";
 
-import { supabase } from "../booking/supabase";
+import { supabase } from "../supabase";
 
 export default function AdminPage() {
 
