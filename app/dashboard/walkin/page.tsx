@@ -5,8 +5,6 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../supabase";
 import html2canvas from "html2canvas";
 
-import LuxuryInvoice from "../../../components/LuxuryInvoice";
-
 export default function WalkinPage() {
 
   const [customerName, setCustomerName] = useState("");
