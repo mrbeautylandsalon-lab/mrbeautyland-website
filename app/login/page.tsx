@@ -27,15 +27,19 @@ export default function LoginPage() {
 
       alert("Login Successful 😎🔥");
 
-      if (result.user.email === "mrbeautylandsalon@gmail.com") {
+      if (
+  result.user.email ===
+  "mrbeautylandsalon@gmail.com"
+) {
 
-        window.location.href = "/admin";
+  window.location.href = "/dashboard";
 
-      } else {
+} else {
 
-        window.location.href = "/dashboard";
+  window.location.href =
+    "/customer-dashboard";
 
-      }
+}
 
     } catch (error) {
 
@@ -55,15 +59,19 @@ export default function LoginPage() {
 
       alert("Google Login Successful 😎🔥");
 
-      if (result.user.email === "mrbeautylandsalon@gmail.com") {
+      if (
+  result.user.email ===
+  "mrbeautylandsalon@gmail.com"
+) {
 
-        window.location.href = "/admin";
+  window.location.href = "/dashboard";
 
-      } else {
+} else {
 
-        window.location.href = "/dashboard";
+  window.location.href =
+    "/customer-dashboard";
 
-      }
+}
 
     } catch (error) {
 

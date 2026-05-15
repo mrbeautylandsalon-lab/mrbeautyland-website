@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { supabase } from "../supabase";
+import { supabase } from "../supabase.js";
 import emailjs from "@emailjs/browser";
 
 const services = [
@@ -125,17 +125,22 @@ const handleBooking = async () => {
   const { error } = await supabase
     .from("bookings")
     .insert([
-      {
-  name: name,
-  mobile: mobile,
-  email: email,
-  service: selectedService.name,
-  date: selectedDate,
-  time: selectedSlot,
-  status: "Confirmed",
-  amount: selectedService.price,
-}
-    ]);
+  {
+    customer_name: name,
+    phone: mobile,
+    email: email,
+    service: selectedService.name,
+    gender: "Male",
+    amount: selectedService.price,
+    loyalty_points: 10,
+    payment_status: "Pending",
+    booking_status: "Pending",
+    assigned_staff: "Not Assigned",
+    addons: "None",
+    booking_date: selectedDate,
+    booking_time: selectedSlot,
+  },
+]);
 
   if (error) {
 
@@ -456,7 +461,7 @@ try {
                 </a>
 
                 <a
-                  href="/dashboard"
+                  href="/customer-dashboard"
                   className="flex-1 bg-[#f7f1eb] py-5 rounded-full"
                 >
                   Go To Dashboard

@@ -1,72 +1,175 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase";
+
+import {
+  Users,
+  Calendar,
+  IndianRupee,
+  Clock3,
+  User,
+  Sparkles,
+  Shield,
+  Bell,
+  CreditCard,
+} from "lucide-react";
+
 import { supabase } from "../supabase";
 
+const services = [
+  {
+    name: "Male Hair Cut",
+    price: 199,
+    gender: "Male",
+  },
+
+  {
+    name: "Beard Trim",
+    price: 99,
+    gender: "Male",
+  },
+
+  {
+    name: "Female Hair Cut",
+    price: 500,
+    gender: "Female",
+  },
+
+  {
+    name: "Body Spa",
+    price: 1499,
+    gender: "Female",
+  },
+
+  {
+    name: "Body Massage",
+    price: 1299,
+    gender: "Female",
+  },
+];
+
+const staffMembers = [
+  "Vikram",
+  "Aman",
+  "Rohit",
+  "Sahil",
+];
+
 export default function AdminPage() {
+  const [customerName, setCustomerName] =
+    useState("");
 
-  const router = useRouter();
+  const [phone, setPhone] = useState("");
 
-  const [bookings, setBookings] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState("");
 
-  const [walkInName, setWalkInName] = useState("");
-  const [walkInMobile, setWalkInMobile] = useState("");
-  const [walkInService, setWalkInService] = useState("");
-  const [walkInAmount, setWalkInAmount] = useState("");
+  const [gender, setGender] =
+    useState("Male");
 
-  const [addonName, setAddonName] = useState("");
-  const [addonPrice, setAddonPrice] = useState("");
+  const [selectedService, setSelectedService] =
+    useState("");
+
+  const [staff, setStaff] = useState("");
+
+  const [price, setPrice] = useState(0);
+
+  const [slot, setSlot] = useState("");
+
+  const [bookings, setBookings] = useState<
+    any[]
+  >([]);
+
+  const [addOns, setAddOns] = useState<
+    any[]
+  >([]);
+
+  const [addonName, setAddonName] =
+    useState("");
+
+  const [addonPrice, setAddonPrice] =
+    useState("");
+
+  const filteredServices = services.filter(
+    (service) => service.gender === gender
+  );
+
+  const finalAmount =
+    price +
+    addOns.reduce(
+      (acc, addon) => acc + addon.price,
+      0
+    );
+
+  const loyaltyPoints =
+    Math.floor(finalAmount / 100) * 10;
 
   useEffect(() => {
-
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-
-      if (!user) {
-        router.push("/login");
-        return;
-      }
-
-      if (user.email !== "mrbeautylandsalon@gmail.com") {
-        router.push("/");
-        return;
-      }
-
-      fetchBookings();
-
-    });
-
-    return () => unsubscribe();
-
+    fetchBookings();
   }, []);
 
   const fetchBookings = async () => {
-
     const { data } = await supabase
       .from("bookings")
       .select("*")
-      .order("id", { ascending: false });
+      .order("created_at", {
+        ascending: false,
+      });
 
     if (data) {
       setBookings(data);
     }
-
-    setLoading(false);
-
   };
 
-  const createWalkInBooking = async () => {
+  const handleServiceChange = (
+    serviceName: string
+  ) => {
+    setSelectedService(serviceName);
 
+    const service = services.find(
+      (item) => item.name === serviceName
+    );
+
+    if (service) {
+      setPrice(service.price);
+    }
+  };
+
+  const addAddon = () => {
+    if (!addonName || !addonPrice)
+      return;
+
+    setAddOns([
+      ...addOns,
+
+      {
+        name: addonName,
+        price: Number(addonPrice),
+      },
+    ]);
+
+    setAddonName("");
+    setAddonPrice("");
+  };
+
+  const createBooking = async () => {
     if (
-      !walkInName ||
-      !walkInMobile ||
-      !walkInService ||
-      !walkInAmount
+      !customerName ||
+      !phone ||
+      !email ||
+      !selectedService ||
+      !staff ||
+      !slot
     ) {
-      alert("Fill all walk-in details");
+      alert("Fill all fields");
+      return;
+    }
+
+    const alreadyBooked = bookings.find(
+      (item) => item.slot === slot
+    );
+
+    if (alreadyBooked) {
+      alert("Slot already booked");
       return;
     }
 
@@ -74,387 +177,471 @@ export default function AdminPage() {
       .from("bookings")
       .insert([
         {
-          customer_name: walkInName,
-          customer_mobile: walkInMobile,
-          service_name: walkInService,
-          total_amount: Number(walkInAmount),
-          booking_status: "Walk-In",
+          customer_name: customerName,
+
+          phone,
+
+          email,
+
+          gender,
+
+          service: selectedService,
+
+          assigned_staff: staff,
+
+          amount: finalAmount,
+
+          loyalty_points: loyaltyPoints,
+
           payment_status: "Pending",
-          loyalty_points_earned: Math.floor(Number(walkInAmount) / 100) * 5,
-          booking_date: new Date().toISOString().split("T")[0],
-          booking_time: "Walk-In"
-        }
+
+          booking_status: "Completed",
+
+          slot,
+
+          addons: JSON.stringify(addOns),
+        },
       ]);
 
     if (error) {
-      console.log(error);
-      alert("Walk-In Failed");
+      alert(error.message);
       return;
     }
 
-    alert("Walk-In Booking Added 😎🔥");
+    alert("Booking Created");
 
-    setWalkInName("");
-    setWalkInMobile("");
-    setWalkInService("");
-    setWalkInAmount("");
-
-    fetchBookings();
-
-  };
-
-  const updateBookingStatus = async (
-    id: number,
-    status: string
-  ) => {
-
-    await supabase
-      .from("bookings")
-      .update({ booking_status: status })
-      .eq("id", id);
+    setCustomerName("");
+    setPhone("");
+    setEmail("");
+    setSelectedService("");
+    setStaff("");
+    setPrice(0);
+    setSlot("");
+    setAddOns([]);
 
     fetchBookings();
-
   };
 
-  const updatePaymentStatus = async (
-    id: number,
-    status: string
-  ) => {
-
-    await supabase
-      .from("bookings")
-      .update({ payment_status: status })
-      .eq("id", id);
-
-    fetchBookings();
-
-  };
-
-  const addAddon = async (
-    bookingId: number,
-    currentAmount: number
-  ) => {
-
-    if (!addonName || !addonPrice) {
-      alert("Enter addon details");
-      return;
-    }
-
-    const updatedAmount =
-      Number(currentAmount) + Number(addonPrice);
-
+  const markPaid = async (id: number) => {
     await supabase
       .from("bookings")
       .update({
-        total_amount: updatedAmount,
-        addons: {
-          name: addonName,
-          price: addonPrice
-        }
+        payment_status: "Paid",
       })
-      .eq("id", bookingId);
-
-    alert("Addon Added 😎🔥");
-
-    setAddonName("");
-    setAddonPrice("");
+      .eq("id", id);
 
     fetchBookings();
-
   };
 
-  const sendPaymentRequest = async (
-    booking: any
-  ) => {
-
-    await supabase
-      .from("payment_requests")
-      .insert([
-        {
-          customer_email: booking.customer_email,
-          customer_name: booking.customer_name,
-          amount: booking.total_amount,
-          booking_id: booking.id,
-          status: "Pending"
-        }
-      ]);
-
-    await supabase
-      .from("notifications")
-      .insert([
-        {
-          customer_email: booking.customer_email,
-          title: "Payment Pending",
-          message: `Please pay ₹${booking.total_amount}`,
-          type: "payment"
-        }
-      ]);
-
-    alert("Payment Request Sent 😎🔥");
-
-  };
+  const totalRevenue = bookings.reduce(
+    (acc, item) => acc + Number(item.amount),
+    0
+  );
 
   return (
+    <div className="min-h-screen bg-[#f4efe8] text-black flex">
+      {/* SIDEBAR */}
 
-    <main className="min-h-screen bg-[#f7f1eb] text-black p-5 md:p-10">
+      <div className="w-[260px] bg-black text-white p-6 flex flex-col gap-5">
 
-      {/* HEADER */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-10">
+        <h1 className="text-3xl font-bold mb-10">
+          MR BEAUTY LAND
+        </h1>
 
-        <div>
-
-          <p className="uppercase tracking-[5px] text-sm text-neutral-500 mb-3">
-            MR BEAUTYLAND
-          </p>
-
-          <h1 className="text-3xl md:text-5xl font-bold">
-            Luxury Admin Panel
-          </h1>
-
+        <div className="flex items-center gap-3">
+          <Calendar />
+          Dashboard
         </div>
 
-        <button
-          onClick={() => {
-            auth.signOut();
-            router.push("/");
-          }}
-          className="bg-black text-white px-6 py-4 rounded-full"
-        >
-          Logout
-        </button>
+        <div className="flex items-center gap-3">
+          <Users />
+          Customers
+        </div>
+
+        <div className="flex items-center gap-3">
+          <IndianRupee />
+          Revenue
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Clock3 />
+          Slots
+        </div>
+
+        <div className="flex items-center gap-3">
+          <User />
+          Staff
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Sparkles />
+          Loyalty
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Bell />
+          Notifications
+        </div>
+
+        <div className="flex items-center gap-3">
+          <CreditCard />
+          Payments
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Shield />
+          Settings
+        </div>
 
       </div>
 
-      {/* STATS */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+      {/* MAIN */}
 
-        <div className="bg-white rounded-[35px] p-8">
-          <p className="text-neutral-500 mb-3">Total Bookings</p>
-          <h2 className="text-5xl font-bold">
-            {bookings.length}
-          </h2>
-        </div>
+      <div className="flex-1 p-8">
 
-        <div className="bg-white rounded-[35px] p-8">
-          <p className="text-neutral-500 mb-3">Revenue</p>
-          <h2 className="text-5xl font-bold">
-            ₹{
-              bookings.reduce(
+        <h1 className="text-6xl font-bold mb-10">
+          Luxury Admin Panel
+        </h1>
+
+        {/* STATS */}
+
+        <div className="grid md:grid-cols-4 gap-5 mb-10">
+
+          <div className="bg-white rounded-3xl p-6">
+            <h2>Total Bookings</h2>
+
+            <p className="text-5xl font-bold mt-3">
+              {bookings.length}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-3xl p-6">
+            <h2>Total Revenue</h2>
+
+            <p className="text-5xl font-bold mt-3">
+              ₹{totalRevenue}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-3xl p-6">
+            <h2>Pending Payments</h2>
+
+            <p className="text-5xl font-bold mt-3">
+              {
+                bookings.filter(
+                  (b) =>
+                    b.payment_status ===
+                    "Pending"
+                ).length
+              }
+            </p>
+          </div>
+
+          <div className="bg-white rounded-3xl p-6">
+            <h2>Loyalty Issued</h2>
+
+            <p className="text-5xl font-bold mt-3">
+              {bookings.reduce(
                 (acc, item) =>
-                  acc + (item.total_amount || 0),
+                  acc +
+                  Number(
+                    item.loyalty_points
+                  ),
                 0
-              )
-            }
+              )}
+            </p>
+          </div>
+
+        </div>
+
+        {/* BOOKING FORM */}
+
+        <div className="bg-white rounded-3xl p-8 mb-10">
+
+          <h2 className="text-4xl font-bold mb-8">
+            Walk-In Booking
           </h2>
-        </div>
 
-        <div className="bg-white rounded-[35px] p-8">
-          <p className="text-neutral-500 mb-3">Pending Payments</p>
-          <h2 className="text-5xl font-bold">
-            {
-              bookings.filter(
-                (b) => b.payment_status === "Pending"
-              ).length
-            }
-          </h2>
-        </div>
+          <div className="grid md:grid-cols-2 gap-5">
 
-        <div className="bg-white rounded-[35px] p-8">
-          <p className="text-neutral-500 mb-3">Completed</p>
-          <h2 className="text-5xl font-bold">
-            {
-              bookings.filter(
-                (b) => b.booking_status === "Completed"
-              ).length
-            }
-          </h2>
-        </div>
+            <input
+              placeholder="Customer Name"
+              value={customerName}
+              onChange={(e) =>
+                setCustomerName(
+                  e.target.value
+                )
+              }
+              className="border rounded-2xl p-4"
+            />
 
-      </div>
+            <input
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) =>
+                setPhone(e.target.value)
+              }
+              className="border rounded-2xl p-4"
+            />
 
-      {/* WALK-IN */}
-      <div className="bg-white rounded-[40px] p-8 mb-10">
+            <input
+              placeholder="Email"
+              value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
+              className="border rounded-2xl p-4"
+            />
 
-        <h2 className="text-3xl font-bold mb-8">
-          New Walk-In Booking
-        </h2>
+            <select
+              value={gender}
+              onChange={(e) =>
+                setGender(e.target.value)
+              }
+              className="border rounded-2xl p-4"
+            >
+              <option>Male</option>
+              <option>Female</option>
+            </select>
 
-        <div className="grid md:grid-cols-4 gap-5">
+            <select
+              value={selectedService}
+              onChange={(e) =>
+                handleServiceChange(
+                  e.target.value
+                )
+              }
+              className="border rounded-2xl p-4"
+            >
+              <option value="">
+                Select Service
+              </option>
 
-          <input
-            type="text"
-            placeholder="Customer Name"
-            value={walkInName}
-            onChange={(e) => setWalkInName(e.target.value)}
-            className="bg-[#f7f1eb] px-5 py-4 rounded-2xl outline-none"
-          />
+              {filteredServices.map(
+                (service) => (
+                  <option
+                    key={service.name}
+                    value={service.name}
+                  >
+                    {service.name}
+                  </option>
+                )
+              )}
+            </select>
 
-          <input
-            type="text"
-            placeholder="Mobile Number"
-            value={walkInMobile}
-            onChange={(e) => setWalkInMobile(e.target.value)}
-            className="bg-[#f7f1eb] px-5 py-4 rounded-2xl outline-none"
-          />
+            <select
+              value={staff}
+              onChange={(e) =>
+                setStaff(e.target.value)
+              }
+              className="border rounded-2xl p-4"
+            >
+              <option value="">
+                Assign Staff
+              </option>
 
-          <input
-            type="text"
-            placeholder="Service"
-            value={walkInService}
-            onChange={(e) => setWalkInService(e.target.value)}
-            className="bg-[#f7f1eb] px-5 py-4 rounded-2xl outline-none"
-          />
+              {staffMembers.map((item) => (
+                <option
+                  key={item}
+                  value={item}
+                >
+                  {item}
+                </option>
+              ))}
+            </select>
 
-          <input
-            type="number"
-            placeholder="Amount"
-            value={walkInAmount}
-            onChange={(e) => setWalkInAmount(e.target.value)}
-            className="bg-[#f7f1eb] px-5 py-4 rounded-2xl outline-none"
-          />
+            <input
+              placeholder="Slot Example 4PM"
+              value={slot}
+              onChange={(e) =>
+                setSlot(e.target.value)
+              }
+              className="border rounded-2xl p-4"
+            />
 
-        </div>
+            <input
+              type="number"
+              value={price}
+              onChange={(e) =>
+                setPrice(
+                  Number(e.target.value)
+                )
+              }
+              className="border rounded-2xl p-4"
+            />
 
-        <button
-          onClick={createWalkInBooking}
-          className="mt-6 bg-black text-white px-8 py-4 rounded-full"
-        >
-          Create Walk-In Booking
-        </button>
+          </div>
 
-      </div>
+          {/* ADDONS */}
 
-      {/* BOOKINGS */}
-      <div className="grid gap-8">
+          <div className="mt-10">
 
-        {
-          loading ? (
-            <div className="text-2xl font-semibold">
-              Loading...
+            <h2 className="text-3xl font-bold mb-5">
+              Add-On Services
+            </h2>
+
+            <div className="grid md:grid-cols-3 gap-5">
+
+              <input
+                placeholder="Addon Name"
+                value={addonName}
+                onChange={(e) =>
+                  setAddonName(
+                    e.target.value
+                  )
+                }
+                className="border rounded-2xl p-4"
+              />
+
+              <input
+                type="number"
+                placeholder="Addon Price"
+                value={addonPrice}
+                onChange={(e) =>
+                  setAddonPrice(
+                    e.target.value
+                  )
+                }
+                className="border rounded-2xl p-4"
+              />
+
+              <button
+                onClick={addAddon}
+                className="bg-black text-white rounded-2xl"
+              >
+                Add Addon
+              </button>
+
             </div>
-          ) : (
-            bookings.map((booking) => (
+
+            <div className="mt-6 space-y-3">
+
+              {addOns.map((addon, index) => (
+
+                <div
+                  key={index}
+                  className="bg-[#f5f5f5] rounded-2xl p-4 flex justify-between"
+                >
+                  <span>{addon.name}</span>
+
+                  <span>
+                    ₹{addon.price}
+                  </span>
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+          {/* FINAL */}
+
+          <div className="mt-10">
+
+            <h2 className="text-5xl font-bold">
+              ₹{finalAmount}
+            </h2>
+
+            <p className="text-2xl mt-3">
+              Loyalty Points:
+              {" "}
+              {loyaltyPoints}
+            </p>
+
+            <button
+              onClick={createBooking}
+              className="mt-6 bg-black text-white px-10 py-5 rounded-2xl text-xl"
+            >
+              Create Booking
+            </button>
+
+          </div>
+
+        </div>
+
+        {/* BOOKINGS */}
+
+        <div className="bg-white rounded-3xl p-8">
+
+          <h2 className="text-4xl font-bold mb-8">
+            All Bookings
+          </h2>
+
+          <div className="space-y-5">
+
+            {bookings.map((booking) => (
 
               <div
                 key={booking.id}
-                className="bg-white rounded-[40px] p-8"
+                className="border rounded-3xl p-6"
               >
 
-                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
+                <div className="flex justify-between">
 
-                  {/* LEFT */}
-                  <div className="grid gap-3">
+                  <div>
 
                     <h2 className="text-3xl font-bold">
-                      {booking.customer_name}
+                      {
+                        booking.customer_name
+                      }
                     </h2>
 
-                    <p className="text-neutral-600">
-                      {booking.service_name}
-                    </p>
-
-                    <p className="text-neutral-600">
-                      {booking.customer_mobile}
-                    </p>
-
-                    <p className="text-neutral-600 break-all">
-                      {booking.customer_email}
-                    </p>
-
-                    <p className="font-semibold text-xl">
-                      ₹{booking.total_amount}
+                    <p>
+                      {booking.service}
                     </p>
 
                     <p>
-                      Loyalty Points: {booking.loyalty_points_earned}
+                      Staff:
+                      {" "}
+                      {
+                        booking.assigned_staff
+                      }
                     </p>
 
                     <p>
-                      Booking Status: {booking.booking_status}
+                      Slot:
+                      {" "}
+                      {booking.slot}
                     </p>
 
                     <p>
-                      Payment Status: {booking.payment_status}
+                      ₹{booking.amount}
+                    </p>
+
+                    <p>
+                      Points:
+                      {" "}
+                      {
+                        booking.loyalty_points
+                      }
+                    </p>
+
+                    <p>
+                      {
+                        booking.payment_status
+                      }
                     </p>
 
                   </div>
 
-                  {/* RIGHT */}
-                  <div className="flex flex-col gap-4 w-full lg:w-[350px]">
+                  <div>
 
-                    <input
-                      type="text"
-                      placeholder="Addon Name"
-                      value={addonName}
-                      onChange={(e) => setAddonName(e.target.value)}
-                      className="bg-[#f7f1eb] px-5 py-4 rounded-2xl outline-none"
-                    />
+                    {booking.payment_status ===
+                      "Pending" && (
 
-                    <input
-                      type="number"
-                      placeholder="Addon Price"
-                      value={addonPrice}
-                      onChange={(e) => setAddonPrice(e.target.value)}
-                      className="bg-[#f7f1eb] px-5 py-4 rounded-2xl outline-none"
-                    />
+                      <button
+                        onClick={() =>
+                          markPaid(
+                            booking.id
+                          )
+                        }
+                        className="bg-green-600 text-white rounded-2xl px-6 py-3"
+                      >
+                        Mark Paid
+                      </button>
 
-                    <button
-                      onClick={() =>
-                        addAddon(
-                          booking.id,
-                          booking.total_amount
-                        )
-                      }
-                      className="bg-black text-white py-4 rounded-full"
-                    >
-                      Add Extra Service
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        updateBookingStatus(
-                          booking.id,
-                          "Completed"
-                        )
-                      }
-                      className="bg-green-600 text-white py-4 rounded-full"
-                    >
-                      Mark Completed
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        updatePaymentStatus(
-                          booking.id,
-                          "Paid"
-                        )
-                      }
-                      className="bg-blue-600 text-white py-4 rounded-full"
-                    >
-                      Mark Paid
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        sendPaymentRequest(booking)
-                      }
-                      className="bg-yellow-500 text-black py-4 rounded-full"
-                    >
-                      Send Payment Request
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        updateBookingStatus(
-                          booking.id,
-                          "Cancelled"
-                        )
-                      }
-                      className="bg-red-500 text-white py-4 rounded-full"
-                    >
-                      Cancel Booking
-                    </button>
+                    )}
 
                   </div>
 
@@ -462,13 +649,14 @@ export default function AdminPage() {
 
               </div>
 
-            ))
-          )
-        }
+            ))}
+
+          </div>
+
+        </div>
 
       </div>
 
-    </main>
-
+    </div>
   );
 }

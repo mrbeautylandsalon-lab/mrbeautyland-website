@@ -68,71 +68,70 @@ export default function Home() {
     </div>
 
     {/* DESKTOP MENU */}
-    <div className="hidden md:flex items-center gap-8 font-medium">
+<div className="hidden md:flex items-center gap-8 font-medium">
 
-      <a href="#home" className="hover:text-neutral-500 transition">
-        Home
-      </a>
+  <a href="#home" className="hover:text-neutral-500 transition">
+    Home
+  </a>
 
-      <a href="#services" className="hover:text-neutral-500 transition">
-        Services
-      </a>
+  <a href="#services" className="hover:text-neutral-500 transition">
+    Services
+  </a>
 
-      <a href="#contact" className="hover:text-neutral-500 transition">
-        Contact
-      </a>
+  <a href="#contact" className="hover:text-neutral-500 transition">
+    Contact
+  </a>
 
-      {
-        loggedIn ? (
+  {
+    loggedIn ? (
 
-          <Link
-            href="/dashboard"
-            className="bg-black text-white px-6 py-3 rounded-full"
-          >
-            Dashboard
-          </Link>
+      <Link
+        href="/customer-dashboard"
+        className="bg-black text-white px-6 py-3 rounded-full"
+      >
+        Dashboard
+      </Link>
 
-        ) : (
+    ) : (
 
-          <Link
-            href="/login"
-            className="bg-black text-white px-6 py-3 rounded-full"
-          >
-            Login
-          </Link>
+      <Link
+        href="/login"
+        className="bg-black text-white px-6 py-3 rounded-full"
+      >
+        Login
+      </Link>
 
-        )
-      }
+    )
+  }
 
-    </div>
+</div>
 
-    {/* MOBILE LOGIN */}
-    <div className="md:hidden">
+{/* MOBILE LOGIN */}
+<div className="md:hidden">
 
-      {
-        loggedIn ? (
+  {
+    loggedIn ? (
 
-          <Link
-            href="/dashboard"
-            className="bg-black text-white px-4 py-2 rounded-full text-sm"
-          >
-            Dashboard
-          </Link>
+      <Link
+        href="/customer-dashboard"
+        className="bg-black text-white px-4 py-2 rounded-full text-sm"
+      >
+        Dashboard
+      </Link>
 
-        ) : (
+    ) : (
 
-          <Link
-            href="/login"
-            className="bg-black text-white px-4 py-2 rounded-full text-sm"
-          >
-            Login
-          </Link>
+      <Link
+        href="/login"
+        className="bg-black text-white px-4 py-2 rounded-full text-sm"
+      >
+        Login
+      </Link>
 
-        )
-      }
+    )
+  }
 
-    </div>
-
+</div>
   </div>
 
   {/* MOBILE MENU */}
