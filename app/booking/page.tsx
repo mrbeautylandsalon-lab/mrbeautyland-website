@@ -651,17 +651,17 @@ if (existingCustomer) {
     )
 
     .map(
-      (
-        service,
-        index
-      ) => {
+  (
+    service,
+    index
+  ) => (
 
         const active =
           selectedServices.find(
             (item) =>
               item.name ===
               service.name
-          );
+          ))
 
         return (
 
