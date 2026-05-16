@@ -636,78 +636,62 @@ if (existingCustomer) {
 
   </div>
 
-  <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
+  <div className="flex gap-4 overflow-x-auto pb-4">
 
-  SERVICES[
-  activeCategory as keyof typeof SERVICES
-]
-
-    ?.filter((service) =>
+  {SERVICES[
+    activeCategory as keyof typeof SERVICES
+  ]
+    .filter((service) =>
       service.name
         .toLowerCase()
         .includes(
           search.toLowerCase()
         )
     )
-
     .map(
-  (
-    service,
-    index
-  ) => (
+      (
+        service,
+        index
+      ) => {
 
         const active =
           selectedServices.find(
             (item) =>
               item.name ===
               service.name
-          ))
+          );
 
         return (
 
           <div
-            key={index}
-            onClick={() =>
-              toggleService(
-                service
-              )
-            }
-            className={`min-w-[180px] snap-start rounded-[25px] p-5 cursor-pointer transition border-2 flex-shrink-0 ${
+            key={`${service.name}-${index}`}
+            className={`min-w-[220px] rounded-[30px] p-5 transition ${
               active
-                ? "bg-black text-white border-black"
-                : "bg-white border-transparent"
+                ? "bg-black text-white"
+                : "bg-white"
             }`}
           >
 
-            <h3 className="text-lg font-bold mb-3 leading-6">
+            <h3 className="text-xl font-bold mb-2">
 
               {service.name}
 
             </h3>
 
-            <div className="flex flex-col gap-1 mb-4">
+            <p className="text-lg mb-5">
 
-              <span className="text-neutral-400 line-through text-sm">
+              ₹{service.price}
 
-                ₹{
-                  service.price +
-                  300
-                }
-
-              </span>
-
-              <span className="text-2xl font-bold">
-
-                ₹{
-                  service.price
-                }
-
-              </span>
-
-            </div>
+            </p>
 
             <button
-              className={`w-full py-2 rounded-full text-sm ${
+              type="button"
+              onClick={() =>
+                toggleService(
+                  service
+                )
+              }
+              className={`w-full py-3 rounded-full text-sm ${
                 active
                   ? "bg-white text-black"
                   : "bg-black text-white"
@@ -728,7 +712,6 @@ if (existingCustomer) {
     )}
 
 </div>
-
   {/* SELECTED SERVICES */}
 
   {selectedServices.length >
