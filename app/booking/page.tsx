@@ -1,13 +1,17 @@
 "use client";
 export const dynamic =
   "force-dynamic";
-import { useEffect, useState } from "react";
+import {
+  Suspense,
+  useEffect,
+  useState,
+} from "react";
 
 import { useSearchParams } from "next/navigation";
 
 import { supabase } from "../supabase";
 
-export default function BookingPage() {
+function BookingContent() {
 
   const searchParams =
     useSearchParams();
@@ -1162,6 +1166,19 @@ if (existingCustomer) {
 
 )}
     </main>
+
+  );
+
+}
+export default function BookingPage() {
+
+  return (
+
+    <Suspense>
+
+      <BookingContent />
+
+    </Suspense>
 
   );
 
