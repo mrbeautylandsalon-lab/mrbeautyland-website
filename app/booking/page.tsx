@@ -248,7 +248,7 @@ const [activeCategory, setActiveCategory] =
   const [bookedSlots, setBookedSlots] =
     useState<string[]>([]);
 const referralLink =
-  `https://mrbeautyland.in/booking?ref=${referralEmail}`;
+  `https://mrbeautyland.in/booking?ref=${email}`;
   useEffect(() => {
 
     if (
