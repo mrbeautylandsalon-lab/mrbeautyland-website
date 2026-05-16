@@ -638,9 +638,9 @@ if (existingCustomer) {
 
   <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
 
-  {SERVICES[
-    activeCategory
-  ]
+  SERVICES[
+  activeCategory as keyof typeof SERVICES
+]
 
     ?.filter((service) =>
       service.name
