@@ -450,8 +450,7 @@ const referralLink =
   email:
     email,
 
-    phone:
-  mobile,
+    
   service:
     servicesText,
 
