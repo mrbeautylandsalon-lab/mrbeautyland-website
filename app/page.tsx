@@ -13,7 +13,12 @@ export default function Home() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   const [menuOpen, setMenuOpen] = useState(false);
-
+const [showReferralPopup, setShowReferralPopup] =
+  useState(false);
+const [referralEmail, setReferralEmail] =
+  useState("");
+const [showScissor, setShowScissor] =
+  useState(false);
   useEffect(() => {
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -33,10 +38,29 @@ export default function Home() {
     return () => unsubscribe();
 
   }, []);
+useEffect(() => {
 
+  const timer =
+    setTimeout(() => {
+
+      setShowScissor(true);
+
+      setTimeout(() => {
+
+        setShowReferralPopup(true);
+
+      }, 2500);
+
+    }, 5000);
+
+  return () =>
+    clearTimeout(timer);
+
+}, []);
   return (
 
     <main className="bg-[#f7f1eb] text-black min-h-screen overflow-hidden">
+
 
 {/* NAVBAR */}
 <nav className="fixed top-0 left-0 w-full bg-[#f7f1eb]/95 backdrop-blur border-b border-neutral-200 z-50">
@@ -265,52 +289,157 @@ export default function Home() {
   <div className="text-center mb-20">
 
     <p className="uppercase tracking-[5px] text-sm text-neutral-500 mb-4">
-      Our Services
+      Premium Salon Services
     </p>
 
-    <h2 className="text-5xl font-bold">
-      Premium Salon Services
+    <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-5">
+      Limited Period Offers ✨
     </h2>
+
+    <p className="text-lg text-neutral-600 max-w-2xl mx-auto leading-8">
+      Luxury grooming and beauty experiences crafted for elegance,
+      confidence and premium salon lifestyle.
+    </p>
+
+    <a
+      href="#allservices"
+      className="inline-block w-full sm:w-auto mt-8 bg-black text-white px-8 py-4 rounded-full text-base hover:scale-105 transition"
+    >
+      View All 200+ Services
+    </a>
 
   </div>
 
-  <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+  <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
     {[
-      ["MEN'S HAIR CUT", "₹189"],
-      ["MEN'S HAIR COLOUR", "₹489"],
-      ["FACIAL TREATMENT", "₹489"],
-      ["BODY SPA", "₹989"],
-      ["BODY MASSAGE", "₹789"],
-      ["AROMA MAGIC COMBO", "₹989"],
+      [
+        "MEN'S HAIRCUT",
+        "₹350",
+        "₹250"
+      ],
+
+      [
+        "BEARD TRIM",
+        "₹250",
+        "₹150"
+      ],
+
+      [
+        "O3+ FACIAL",
+        "₹1500",
+        "₹999"
+      ],
+
+      [
+        "HAIR SPA",
+        "₹1400",
+        "₹999"
+      ],
+
+      [
+        "KERATIN",
+        "₹3200",
+        "₹2500"
+      ],
+
+      [
+        "NANOPLASTIA",
+        "₹4500",
+        "₹3000"
+      ],
+
     ].map((service, index) => (
 
       <div
         key={index}
-        className="bg-[#f7f1eb] p-8 rounded-[35px] hover:-translate-y-2 transition duration-300"
+        className="bg-[#f7f1eb] p-6 rounded-[30px] hover:-translate-y-2 transition duration-300 relative overflow-hidden"
       >
 
-        <h3 className="text-3xl font-bold mb-5">
+        <div className="absolute top-4 right-4 bg-black text-white text-[10px] px-3 py-1 rounded-full tracking-wide">
+          LIMITED OFFER
+        </div>
+
+        <h3 className="text-2xl md:text-3xl font-bold mb-4">
           {service[0]}
         </h3>
 
-        <div className="flex gap-3 items-center mb-6">
+        <div className="flex items-center gap-4 mb-6">
 
-          <span className="text-2xl font-bold">
+          <span className="text-neutral-400 line-through text-xl">
             {service[1]}
+          </span>
+
+          <span className="text-3xl font-bold text-[#b8860b]">
+            {service[2]}
           </span>
 
         </div>
 
-        <p className="leading-8 text-neutral-700 mb-8">
-          Premium salon experience crafted by professional experts.
-        </p>
+        
 
         <a
           href="/booking"
-          className="bg-black text-white px-6 py-3 rounded-full inline-block hover:scale-105 transition"
+          className="bg-black text-white px-5 py-2.5 rounded-full inline-block text-sm hover:scale-105 transition"
         >
-          BOOK
+          BOOK NOW
+        </a>
+
+      </div>
+
+    ))}
+
+  </div>
+
+</section>
+
+{/* ALL SERVICES */}
+<section
+  id="allservices"
+  className="px-6 md:px-12 py-28 bg-[#f7f1eb]"
+>
+
+  <div className="text-center mb-20">
+
+    <p className="uppercase tracking-[5px] text-sm text-neutral-500 mb-4">
+      Full Menu
+    </p>
+
+    <h2 className="text-3xl sm:text-5xl font-bold">
+      Explore 200+ Services
+    </h2>
+
+  </div>
+
+  <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+    {[
+      "MEN SERVICES",
+      "FACIAL SERVICES",
+      "HAIR SERVICES",
+      "WAX SERVICES",
+      "D-TAN SERVICES",
+      "BLEACH SERVICES",
+      "SPA SERVICES",
+      "BRIDAL SERVICES",
+    ].map((category, index) => (
+
+      <div
+        key={index}
+        className="bg-white rounded-[28px] p-5 hover:shadow-xl transition"
+      >
+
+        <h3 className="text-2xl font-bold mb-3">
+          {category}
+        </h3>
+
+       
+
+        <a
+          href="/booking"
+          className="bg-black text-white px-5 py-2 rounded-full inline-block text-sm"
+        >
+          Explore
         </a>
 
       </div>
@@ -504,6 +633,13 @@ export default function Home() {
 
         <input
           type="text"
+          value={referralEmail}
+
+onChange={(e) =>
+  setReferralEmail(
+    e.target.value
+  )
+}
           placeholder="Name"
           className="px-6 py-4 rounded-2xl bg-[#f7f1eb] outline-none"
         />
@@ -561,7 +697,7 @@ export default function Home() {
     </p>
 
     <a
-      href="https://wa.me/917073937995"
+      href="https://wa.me/918890781097"
       target="_blank"
       className="bg-black text-white px-8 py-4 rounded-full inline-block hover:scale-105 transition"
     >
@@ -764,9 +900,9 @@ export default function Home() {
 
       <div className="grid gap-4 text-white/70">
 
-        <p>+91 7073937995</p>
+        <p>+91 9414625823</p>
 
-        <p>+91 8619073599</p>
+        <p>+91 8890781097</p>
 
         <p>mrbeautylandsalon@gmail.com</p>
 
@@ -823,6 +959,85 @@ export default function Home() {
 >
   WhatsApp
 </a>
+{/* SCISSOR */}
+
+{showScissor && !showReferralPopup && (
+
+<div className="scissor-animation">
+
+  <div className="scissor-icon">
+    ✂️
+
+  </div>
+
+</div>
+
+)}
+
+{/* REFERRAL POPUP */}
+
+{showReferralPopup && (
+
+  <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-5">
+
+    <div className="bg-white max-w-md w-full rounded-[35px] p-8 relative text-center animate-[popupScale_0.4s_ease]">
+
+      <button
+        onClick={() => {
+          setShowReferralPopup(false);
+          setShowScissor(false);
+        }}
+        className="absolute top-4 right-4 text-2xl"
+      >
+        ✕
+      </button>
+
+      <div className="text-6xl mb-5 animate-bounce">
+        🎁
+      </div>
+
+      <h2 className="text-3xl sm:text-4xl font-bold mb-4 leading-tight">
+
+        Refer Your Friend
+        & Earn 50 Loyalty Points ✨
+
+      </h2>
+
+      <p className="text-neutral-600 leading-7 mb-8">
+
+        Your friend also gets
+        50 loyalty points 😎🔥
+
+      </p>
+
+      <input
+        type="text"
+        placeholder="Enter Your Gmail"
+        className="w-full bg-[#f7f1eb] px-6 py-4 rounded-full outline-none mb-5"
+      />
+
+      <div className="grid gap-4">
+
+        <button
+          className="bg-black text-white py-4 rounded-full"
+        >
+          Generate Referral Link
+        </button>
+
+        <a
+          href="/booking"
+          className="bg-[#f7f1eb] py-4 rounded-full"
+        >
+          Book Appointment
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
     </main>
   );
 }

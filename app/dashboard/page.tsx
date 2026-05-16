@@ -266,6 +266,8 @@ const [availablePoints, setAvailablePoints] =
 
 const [claimedPoints, setClaimedPoints] =
   useState(0);
+  const [referrals, setReferrals] =
+  useState<any[]>([]);
   /* TOTAL */
 async function searchCustomers(
   value: string
@@ -320,6 +322,26 @@ function selectCustomer(
   setCustomerSuggestions([]);
 
 }
+const fetchReferrals =
+  async () => {
+
+    const { data } =
+      await supabase
+        .from("bookings")
+        .select("*")
+        .not(
+          "referred_by",
+          "is",
+          null
+        );
+
+    if (data) {
+
+      setReferrals(data);
+
+    }
+
+  };
   useEffect(() => {
 
     setTotalAmount(
@@ -398,9 +420,76 @@ function selectCustomer(
   useEffect(() => {
 
     loadDashboard();
-
+fetchReferrals();
   }, [selectedDate]);
+const transferReferralPoints =
+  async (
+    booking: any
+  ) => {
 
+    const reward = 50;
+
+    const { data: referrer } =
+      await supabase
+        .from("customers")
+        .select("*")
+        .eq(
+          "email",
+          booking.referred_by
+        )
+        .single();
+
+    const { data: friend } =
+      await supabase
+        .from("customers")
+        .select("*")
+        .eq(
+          "email",
+          booking.email
+        )
+        .single();
+
+    if (referrer) {
+
+      await supabase
+        .from("customers")
+        .update({
+
+          loyalty_points:
+            (referrer.loyalty_points || 0) +
+            reward,
+
+        })
+        .eq(
+          "email",
+          booking.referred_by
+        );
+
+    }
+
+    if (friend) {
+
+      await supabase
+        .from("customers")
+        .update({
+
+          loyalty_points:
+            (friend.loyalty_points || 0) +
+            reward,
+
+        })
+        .eq(
+          "email",
+          booking.email
+        );
+
+    }
+
+    alert(
+      "Referral Points Transferred 😎🔥"
+    );
+
+  };
   /* CREATE BOOKING */
 
   async function createWalkinBooking() {
@@ -1026,10 +1115,10 @@ setTimeout(() => {
     SERVICES
   )
     .flat()
-    .map((item) => (
+    .map((item, index) => (
 
       <option
-        key={`${item.name}-${item.price}`}
+        key={`${item.name}-${item.price}-${index}`}
         value={item.name}
       />
 
@@ -1041,7 +1130,7 @@ setTimeout(() => {
 
   <div className="flex flex-wrap gap-3">
 
-    {services.map((item) => (
+    {services.map((item, index) => (
 
       <div
         key={item}
@@ -1076,7 +1165,59 @@ setTimeout(() => {
   </div>
 
 </div>
+<input
+  type="text"
+  placeholder="Search Addon..."
+  list="all-addon-services"
+  className="bg-[#f7f1eb] p-5 rounded-3xl outline-none w-full text-black"
+  onChange={(e) => {
 
+    const selected =
+      Object.values(
+        SERVICES
+      )
+        .flat()
+        .find(
+          (item) =>
+            item.name ===
+            e.target.value
+        );
+
+    if (!selected)
+      return;
+
+    setAddons(
+      selected.name
+    );
+
+    setAddonAmount(
+      selected.price
+    );
+
+    setTotalAmount(
+      amount +
+      selected.price
+    );
+
+  }}
+/>
+
+<datalist id="all-addon-services">
+
+  {Object.values(
+    SERVICES
+  )
+    .flat()
+    .map((item, index) => (
+
+      <option
+        key={`addon-${item.name}-${item.price}-${index}`}
+        value={item.name}
+      />
+
+    ))}
+
+</datalist>
 <input
   type="text"
   placeholder="Assigned Staff"
@@ -1218,6 +1359,64 @@ setTimeout(() => {
         </button>
 
       </div>
+<div className="bg-white rounded-[35px] p-8 mt-10">
+
+  <h2 className="text-3xl font-bold mb-8">
+
+    Referral Rewards 😎🔥
+
+  </h2>
+
+  <div className="grid gap-5">
+
+    {referrals.map(
+      (
+        booking,
+        index
+      ) => (
+
+        <div
+          key={index}
+          className="border rounded-[25px] p-5"
+        >
+
+          <div className="mb-2">
+
+            Friend:
+            {" "}
+            {booking.email}
+
+          </div>
+
+          <div className="mb-4">
+
+            Referred By:
+            {" "}
+            {booking.referred_by}
+
+          </div>
+
+          <button
+            onClick={() =>
+              transferReferralPoints(
+                booking
+              )
+            }
+            className="bg-black text-white px-6 py-3 rounded-full"
+          >
+
+            Transfer 50 + 50 Points
+
+          </button>
+
+        </div>
+
+      )
+    )}
+
+  </div>
+
+</div>
 </div>
   );
 

@@ -45,17 +45,38 @@ const [selectedBooking, setSelectedBooking] =
   async function createWalkinBooking() {
 function sendPaymentLink() {
 
-  const message = `Hi 👋
+  const message = `✨ MR BEAUTY LAND ✨
 
-Your MR BEAUTY LAND booking is ready ✨
+Hello ${customerName} 👋
 
-Service: ${service}
+Your Walk-In Booking is Confirmed 😎🔥
 
-Total Amount: ₹${totalAmount}
+━━━━━━━━━━━━━━━
 
-Payment Mode: ${paymentMode}
+💇 Main Service:
+${service}
 
-Please complete your payment 😎`;
+✨ Addon:
+${addons || "No Addon"}
+
+💰 Service Amount:
+₹${amount}
+
+➕ Addon Amount:
+₹${addonAmount}
+
+━━━━━━━━━━━━━━━
+
+🧾 Final Total:
+₹${totalAmount}
+
+💳 Payment Mode:
+${paymentMode}
+
+━━━━━━━━━━━━━━━
+
+Thank you for visiting
+MR BEAUTY LAND ✨`;
 
   const whatsappUrl =
     `https://wa.me/91${phone}?text=${encodeURIComponent(message)}`;
