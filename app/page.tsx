@@ -7,7 +7,7 @@ import Link from "next/link";
 import { onAuthStateChanged } from "firebase/auth";
 
 import { auth } from "./firebase";
-
+import { supabase } from "./supabase";
 export default function Home() {
 
   const [loggedIn, setLoggedIn] = useState(false);
@@ -18,6 +18,36 @@ const [showReferralPopup, setShowReferralPopup] =
 const [referralEmail, setReferralEmail] =
   useState("");
 const [showScissor, setShowScissor] =
+  useState(false);
+  const [cutOfferRibbon, setCutOfferRibbon] =
+  useState(false);
+  const [showQuickBooking, setShowQuickBooking] =
+  useState(false);
+
+const [selectedOffer, setSelectedOffer] =
+  useState("");
+  const [quickName, setQuickName] =
+  useState("");
+
+const [quickEmail, setQuickEmail] =
+  useState("");
+
+const [quickPhone, setQuickPhone] =
+  useState("");
+
+const [quickDate, setQuickDate] =
+  useState("");
+
+const [quickTime, setQuickTime] =
+  useState("");
+
+const [quickPoints, setQuickPoints] =
+  useState(0);
+
+const [claimQuickPoints, setClaimQuickPoints] =
+  useState(false);
+
+const [showSuccessPopup, setShowSuccessPopup] =
   useState(false);
   useEffect(() => {
 
@@ -40,23 +70,111 @@ const [showScissor, setShowScissor] =
   }, []);
 useEffect(() => {
 
-  const timer =
-    setTimeout(() => {
+  const fetchPoints =
+    async () => {
 
-      setShowScissor(true);
+      if (!quickEmail) return;
 
-      setTimeout(() => {
+      const { data } =
+        await supabase
+          .from("customers")
+          .select("*")
+          .eq(
+            "email",
+            quickEmail
+          )
+          .single();
 
-        setShowReferralPopup(true);
+      if (data) {
 
-      }, 2500);
+        setQuickPoints(
+          data.loyalty_points || 0
+        );
 
-    }, 5000);
+      }
 
-  return () =>
-    clearTimeout(timer);
+    };
 
-}, []);
+  fetchPoints();
+
+}, [quickEmail]);
+const createQuickBooking =
+  async () => {
+
+    const earnedPoints =
+      Math.floor(99 / 100) * 5;
+
+    const finalPoints =
+      claimQuickPoints
+        ? Math.max(
+            quickPoints - 50,
+            0
+          )
+        : quickPoints;
+
+    await supabase
+      .from("bookings")
+      .insert([
+
+        {
+
+          customer_name:
+            quickName,
+
+          email:
+            quickEmail,
+
+          phone:
+            quickPhone,
+
+          service:
+            selectedOffer,
+
+          date:
+            quickDate,
+
+          time:
+            quickTime,
+
+          total_amount:
+            selectedOffer ===
+            "Mens Haircut"
+              ? 99
+              : 199,
+
+          loyalty_points:
+            earnedPoints,
+
+          claimed_points:
+            claimQuickPoints
+              ? 50
+              : 0,
+
+          status:
+            "pending",
+
+        },
+
+      ]);
+
+    await supabase
+      .from("customers")
+      .upsert({
+
+        email:
+          quickEmail,
+
+        loyalty_points:
+          finalPoints +
+          earnedPoints,
+
+      });
+
+    setShowQuickBooking(false);
+
+    setShowSuccessPopup(true);
+
+  };
   return (
 
     <main className="bg-[#f7f1eb] text-black min-h-screen overflow-hidden">
@@ -183,6 +301,7 @@ useEffect(() => {
 
 </nav>
 
+
       {/* HERO SECTION */}
       <section
         id="home"
@@ -230,6 +349,127 @@ useEffect(() => {
         </div>
 
       </section>
+     
+
+{/* OFFER RIBBON SECTION */}
+
+<section className="px-6 md:px-12 py-20 bg-[#f7f1eb]">
+
+  <div className="max-w-6xl mx-auto">
+
+    {!cutOfferRibbon ? (
+
+      <div className="relative">
+
+        <div className="absolute right-10 -top-10 text-5xl animate-bounce">
+
+          ✂️
+
+        </div>
+
+        <div
+          onClick={() =>
+            setCutOfferRibbon(true)
+          }
+          className="bg-[#e5cfaa] rounded-full py-6 text-center text-2xl font-bold tracking-wide shadow-xl cursor-pointer"
+        >
+
+          SPECIAL OFFER INSIDE ✨
+
+        </div>
+
+      </div>
+
+    ) : (
+
+      <div className="grid md:grid-cols-2 gap-6">
+
+        <div className="bg-white rounded-[40px] p-10 text-center shadow-xl">
+
+          <p className="uppercase tracking-[4px] text-sm text-neutral-500 mb-4">
+
+            Limited Offer
+
+          </p>
+
+          <h2 className="text-5xl font-bold mb-4">
+
+            ₹99
+
+          </h2>
+
+          <p className="text-2xl mb-8">
+
+            Men's Haircut
+
+          </p>
+
+          <button
+  onClick={() => {
+
+    setSelectedOffer(
+      "Mens Haircut"
+    );
+
+    setShowQuickBooking(true);
+
+  }}
+  className="bg-black text-white px-8 py-4 rounded-full inline-block"
+>
+
+  Book Now
+
+</button>
+
+        </div>
+
+        <div className="bg-white rounded-[40px] p-10 text-center shadow-xl">
+
+          <p className="uppercase tracking-[4px] text-sm text-neutral-500 mb-4">
+
+            Limited Offer
+
+          </p>
+
+          <h2 className="text-5xl font-bold mb-4">
+
+            ₹199
+
+          </h2>
+
+          <p className="text-2xl mb-8">
+
+            Women's Haircut
+
+          </p>
+
+          <button
+  onClick={() => {
+
+    setSelectedOffer(
+      "Women's Haircut"
+    );
+
+    setShowQuickBooking(true);
+
+  }}
+  className="bg-black text-white px-8 py-4 rounded-full inline-block"
+>
+
+  Book Now
+
+</button>
+
+        </div>
+
+      </div>
+
+    )}
+
+  </div>
+
+</section>
+
 {/* WHY CHOOSE US */}
 <section className="px-6 md:px-12 py-28">
 
@@ -950,7 +1190,16 @@ onChange={(e) =>
   </div>
 
 </footer>
+<button
+  onClick={() =>
+    setShowReferralPopup(true)
+  }
+  className="fixed bottom-24 right-5 z-50 bg-[#e5cfaa] text-black w-14 h-14 rounded-full shadow-xl flex items-center justify-center text-2xl hover:scale-110 transition"
+>
 
+  🎁
+
+</button>
 {/* FLOATING WHATSAPP BUTTON */}
 <a
   href="https://wa.me/917073937995"
@@ -1030,6 +1279,260 @@ onChange={(e) =>
         >
           Book Appointment
         </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
+
+{showQuickBooking && (
+
+  <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center px-5">
+
+    <div className="bg-white max-w-md w-full rounded-[35px] p-8 relative">
+
+      <button
+        onClick={() =>
+          setShowQuickBooking(false)
+        }
+        className="absolute top-5 right-5 text-2xl"
+      >
+
+        ✕
+
+      </button>
+
+      <h2 className="text-3xl font-bold mb-2">
+
+        {selectedOffer}
+
+      </h2>
+
+      <p className="text-neutral-500 mb-8">
+
+        Quick Booking 😎🔥
+
+      </p>
+
+      <div className="grid gap-5">
+
+        <input
+          type="text"
+          placeholder="Full Name"
+          value={quickName}
+
+onChange={(e) =>
+  setQuickName(
+    e.target.value
+  )
+}
+          className="bg-[#f7f1eb] px-6 py-4 rounded-2xl outline-none"
+        />
+
+        <input
+          type="email"
+          placeholder="Gmail"
+          value={quickEmail}
+
+onChange={(e) =>
+  setQuickEmail(
+    e.target.value
+  )
+}
+          className="bg-[#f7f1eb] px-6 py-4 rounded-2xl outline-none"
+        />
+
+        <input
+          type="tel"
+          placeholder="Mobile Number"
+          value={quickPhone}
+
+onChange={(e) =>
+  setQuickPhone(
+    e.target.value
+  )
+}
+          className="bg-[#f7f1eb] px-6 py-4 rounded-2xl outline-none"
+        />
+
+        <input
+  type="date"
+  value={quickDate}
+  onChange={(e) =>
+    setQuickDate(
+      e.target.value
+    )
+  }
+  className="bg-[#f7f1eb] px-6 py-4 rounded-2xl outline-none"
+/>
+          
+
+       <select
+  value={quickTime}
+  onChange={(e) =>
+    setQuickTime(
+      e.target.value
+    )
+  }
+  className="bg-[#f7f1eb] px-6 py-4 rounded-2xl outline-none"
+>
+
+          <option>
+            Select Time Slot
+          </option>
+
+          <option>
+            09:00 AM
+          </option>
+
+          <option>
+            10:00 AM
+          </option>
+
+          <option>
+            11:00 AM
+          </option>
+
+          <option>
+            12:00 PM
+          </option>
+
+          <option>
+            01:00 PM
+          </option>
+
+          <option>
+            02:00 PM
+          </option>
+
+          <option>
+            03:00 PM
+          </option>
+
+          <option>
+            04:00 PM
+          </option>
+
+          <option>
+            05:00 PM
+          </option>
+
+          <option>
+            06:00 PM
+          </option>
+
+          <option>
+            07:00 PM
+          </option>
+
+          <option>
+            08:00 PM
+          </option>
+
+          <option>
+            09:00 PM
+          </option>
+
+        </select>
+
+        <div className="bg-[#f7f1eb] rounded-2xl px-6 py-5">
+
+          <div className="bg-[#f7f1eb] rounded-2xl px-6 py-5">
+
+  <div className="font-bold mb-2">
+
+    Loyalty Points:
+    {" "}
+    {quickPoints}
+
+  </div>
+
+  {quickPoints >= 50 && (
+
+    <button
+      type="button"
+      onClick={() =>
+        setClaimQuickPoints(
+          !claimQuickPoints
+        )
+      }
+      className="bg-black text-white px-5 py-2 rounded-full text-sm"
+    >
+
+      {claimQuickPoints
+        ? "50 Points Claimed"
+        : "Claim 50 Points"}
+
+    </button>
+
+  )}
+
+</div>
+        </div>
+
+       <button
+  onClick={createQuickBooking}
+  className="bg-black text-white py-5 rounded-full"
+>
+
+  Confirm Booking
+
+</button>
+      </div>
+
+    </div>
+
+  </div>
+
+)}
+{showSuccessPopup && (
+
+  <div className="fixed inset-0 bg-black/60 z-[120] flex items-center justify-center px-5">
+
+    <div className="bg-white max-w-md w-full rounded-[35px] p-8 text-center">
+
+      <div className="text-6xl mb-5">
+
+        🎉
+
+      </div>
+
+      <h2 className="text-3xl font-bold mb-4">
+
+        Booking Successful 😎🔥
+
+      </h2>
+
+      <p className="text-neutral-600 leading-7 mb-8">
+
+        You earned loyalty points successfully ✨
+
+      </p>
+
+      <div className="grid gap-4">
+
+        <Link
+          href="/customer-dashboard"
+          className="bg-black text-white py-4 rounded-full"
+        >
+
+          Track Booking
+
+        </Link>
+
+        <button
+          onClick={() =>
+            setShowSuccessPopup(false)
+          }
+          className="bg-[#f7f1eb] py-4 rounded-full"
+        >
+
+          Go To Homepage
+
+        </button>
 
       </div>
 

@@ -1150,11 +1150,11 @@ if (existingCustomer) {
         </a>
 
         <a
-          href="/dashboard"
+          href="/login"
           className="bg-black text-white py-4 rounded-full"
         >
 
-          Login To Dashboard
+          Track Your Booking
 
         </a>
 
