@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "../supabase";
 
 import emailjs from "@emailjs/browser";
-
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 export default function DashboardPage() {
 
   /* FORM */
@@ -26,7 +27,23 @@ export default function DashboardPage() {
   useState<string[]>([]);
 const [selectedCategory, setSelectedCategory] =
   useState("MEN SERVICES");
+const handleLogout = async () => {
 
+  try {
+
+    await signOut(auth);
+
+    window.location.href = "/login";
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Logout Failed");
+
+  }
+
+};
 const SERVICES = {
 
   "MEN SERVICES": [

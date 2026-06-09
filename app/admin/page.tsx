@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 import {
   Users,
   Calendar,
@@ -56,6 +57,15 @@ const staffMembers = [
 ];
 
 export default function AdminPage() {
+  const handleLogout = async () => {
+  try {
+    await signOut(auth);
+    window.location.href = "/login";
+  } catch (error) {
+    console.log(error);
+    alert("Logout Failed");
+  }
+};
   const [customerName, setCustomerName] =
     useState("");
 
@@ -292,7 +302,12 @@ export default function AdminPage() {
           <Shield />
           Settings
         </div>
-
+<button
+  onClick={handleLogout}
+  className="mt-auto bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-2xl font-semibold"
+>
+  🚪 Logout
+</button>
       </div>
 
       {/* MAIN */}

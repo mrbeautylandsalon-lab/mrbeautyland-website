@@ -320,7 +320,9 @@ const createQuickBooking =
           </p>
 
           <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold text-white leading-tight mb-8">
-            Luxury Hair <br /> & Beauty Experience
+            Bikaner's Most Premium
+<br />
+Unisex Salon Experience
           </h1>
 
           <p className="text-lg md:text-xl text-white/80 leading-8 mb-10">
@@ -386,82 +388,138 @@ const createQuickBooking =
 
         <div className="bg-white rounded-[40px] p-10 text-center shadow-xl">
 
-          <p className="uppercase tracking-[4px] text-sm text-neutral-500 mb-4">
+  <p className="uppercase tracking-[4px] text-sm text-neutral-500 mb-4">
+    Limited Offer
+  </p>
 
-            Limited Offer
+  <h2 className="text-5xl font-bold mb-4">
+    ₹149
+  </h2>
 
-          </p>
+  <p className="text-2xl mb-8">
+    Men's Haircut
+  </p>
 
-          <h2 className="text-5xl font-bold mb-4">
+  <button
+    onClick={() => {
+      setSelectedOffer("Men Haircut Offer");
+      setShowQuickBooking(true);
+    }}
+    className="bg-black text-white px-8 py-4 rounded-full"
+  >
+    Book Now
+  </button>
 
-            ₹99
+</div>
 
-          </h2>
+<div className="bg-white rounded-[40px] p-10 text-center shadow-xl">
 
-          <p className="text-2xl mb-8">
+  <p className="uppercase tracking-[4px] text-sm text-neutral-500 mb-4">
+    Limited Offer
+  </p>
 
-            Men's Haircut
+  <h2 className="text-5xl font-bold mb-4">
+    ₹149
+  </h2>
 
-          </p>
+  <p className="text-2xl mb-8">
+    Women's Haircut
+  </p>
 
-          <button
-  onClick={() => {
+  <button
+    onClick={() => {
+      setSelectedOffer("Women Haircut Offer");
+      setShowQuickBooking(true);
+    }}
+    className="bg-black text-white px-8 py-4 rounded-full"
+  >
+    Book Now
+  </button>
 
-    setSelectedOffer(
-      "Mens Haircut"
-    );
+</div>
 
-    setShowQuickBooking(true);
+<div className="bg-white rounded-[40px] p-10 text-center shadow-xl">
 
-  }}
-  className="bg-black text-white px-8 py-4 rounded-full inline-block"
->
+  <p className="uppercase tracking-[4px] text-sm text-neutral-500 mb-4">
+    Honey Wax Combo
+  </p>
 
-  Book Now
+  <h2 className="text-5xl font-bold mb-4">
+    ₹399
+  </h2>
 
-</button>
+  <p className="leading-8 mb-8">
+    Full Hand + Underarms +
+    Full Legs + Threading Free
+  </p>
 
-        </div>
+  <button
+    onClick={() => {
+      setSelectedOffer("Honey Wax Combo");
+      setShowQuickBooking(true);
+    }}
+    className="bg-black text-white px-8 py-4 rounded-full"
+  >
+    Book Now
+  </button>
 
-        <div className="bg-white rounded-[40px] p-10 text-center shadow-xl">
+</div>
 
-          <p className="uppercase tracking-[4px] text-sm text-neutral-500 mb-4">
+<div className="bg-white rounded-[40px] p-10 text-center shadow-xl">
 
-            Limited Offer
+  <p className="uppercase tracking-[4px] text-sm text-neutral-500 mb-4">
+    Keratin Special
+  </p>
 
-          </p>
+  <h2 className="text-5xl font-bold mb-4">
+    ₹2000
+  </h2>
 
-          <h2 className="text-5xl font-bold mb-4">
+  <p className="leading-8 mb-8">
+    Any Hair Length +
+    Haircut Free +
+    Hair Spa Free +
+    Threading Free
+  </p>
 
-            ₹199
+  <button
+    onClick={() => {
+      setSelectedOffer("Keratin Special");
+      setShowQuickBooking(true);
+    }}
+    className="bg-black text-white px-8 py-4 rounded-full"
+  >
+    Book Now
+  </button>
 
-          </h2>
+</div>
 
-          <p className="text-2xl mb-8">
+<div className="bg-white rounded-[40px] p-10 text-center shadow-xl">
 
-            Women's Haircut
+  <p className="uppercase tracking-[4px] text-sm text-neutral-500 mb-4">
+    Premium Glow Package
+  </p>
 
-          </p>
+  <h2 className="text-5xl font-bold mb-4">
+    ₹1499
+  </h2>
 
-          <button
-  onClick={() => {
+  <p className="leading-8 mb-8">
+    Facial + D-Tan +
+    Hair Spa + Threading
+  </p>
 
-    setSelectedOffer(
-      "Women's Haircut"
-    );
+  <button
+    onClick={() => {
+      setSelectedOffer("Premium Glow Package");
+      setShowQuickBooking(true);
+    }}
+    className="bg-black text-white px-8 py-4 rounded-full"
+  >
+    Book Now
+  </button>
 
-    setShowQuickBooking(true);
-
-  }}
-  className="bg-black text-white px-8 py-4 rounded-full inline-block"
->
-
-  Book Now
-
-</button>
-
-        </div>
-
+</div>
       </div>
 
     )}
@@ -554,15 +612,15 @@ const createQuickBooking =
 
     {[
       [
-        "MEN'S HAIRCUT",
-        "₹350",
-        "₹250"
+      "MEN'S HAIRCUT",
+  "₹250",
+  "₹149"
       ],
 
       [
         "BEARD TRIM",
-        "₹250",
-        "₹150"
+        "₹150",
+        "₹99"
       ],
 
       [
@@ -572,15 +630,15 @@ const createQuickBooking =
       ],
 
       [
-        "HAIR SPA",
+        "HAIR SPA - milk wax",
         "₹1400",
         "₹999"
       ],
 
       [
-        "KERATIN",
+        "KERATIN any hair length",
         "₹3200",
-        "₹2500"
+        "₹2000"
       ],
 
       [
@@ -597,7 +655,7 @@ const createQuickBooking =
       >
 
         <div className="absolute top-4 right-4 bg-black text-white text-[10px] px-3 py-1 rounded-full tracking-wide">
-          LIMITED OFFER
+          
         </div>
 
         <h3 className="text-2xl md:text-3xl font-bold mb-4">
@@ -735,7 +793,7 @@ const createQuickBooking =
     <div>
 
       <h2 className="text-5xl font-bold mb-4">
-        100+
+        500+
       </h2>
 
       <p className="text-white/70">
@@ -747,7 +805,7 @@ const createQuickBooking =
     <div>
 
       <h2 className="text-5xl font-bold mb-4">
-        5★
+        4.9★
       </h2>
 
       <p className="text-white/70">
@@ -759,7 +817,7 @@ const createQuickBooking =
     <div>
 
       <h2 className="text-5xl font-bold mb-4">
-        1 Month
+        2 Month
       </h2>
 
       <p className="text-white/70">
@@ -807,7 +865,7 @@ const createQuickBooking =
       </p>
 
       <h3 className="text-2xl font-bold">
-        Rahul Sharma
+        tushar jain
       </h3>
 
     </div>
@@ -819,7 +877,7 @@ const createQuickBooking =
       </p>
 
       <h3 className="text-2xl font-bold">
-        Priya Verma
+        kajal khan
       </h3>
 
     </div>
@@ -831,7 +889,7 @@ const createQuickBooking =
       </p>
 
       <h3 className="text-2xl font-bold">
-        Vanshika Jain
+        aradhna sankhla
       </h3>
 
     </div>
